@@ -7,10 +7,8 @@ import entity.PageResult;
 import entity.Result;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +42,7 @@ public class BrandController {
 
         return brandService.search(pageNum,pageSize,brand);
     }
+
     //保存
     @RequestMapping("/add")
     public Result add(@RequestBody Brand brand){
@@ -93,5 +92,25 @@ public class BrandController {
     @RequestMapping("/selectOptionList")
     public List<Map> selectOptionList(){
         return brandService.selectOptionList();
+    }
+
+    //开始审核  （审核通过 驳回）
+    @RequestMapping("/updateStatus")
+    public Result updateStatus(Long[] ids ,String status){
+        try {
+            brandService.updateStatus(ids,status);
+            return new Result(true,"成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"失败");
+        }
+    }
+    //查询审核分页对象
+    @RequestMapping("/searchAudit")
+    //public PageResult search(Integer pageNum, Integer pageSize,@RequestBody(required = false) Brand brand){
+    public PageResult searchAudit(Integer pageNum, Integer pageSize,@RequestBody Brand brand){
+
+
+        return brandService.searchAudit(pageNum,pageSize,brand);
     }
 }

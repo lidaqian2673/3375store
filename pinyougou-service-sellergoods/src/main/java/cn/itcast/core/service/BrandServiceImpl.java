@@ -1,16 +1,18 @@
 package cn.itcast.core.service;
 
+import cn.itcast.core.dao.good.BrandAuditDao;
 import cn.itcast.core.dao.good.BrandDao;
 import cn.itcast.core.pojo.good.Brand;
+import cn.itcast.core.pojo.good.BrandAudit;
+import cn.itcast.core.pojo.good.BrandAuditQuery;
 import cn.itcast.core.pojo.good.BrandQuery;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +26,9 @@ public class BrandServiceImpl implements BrandService {
 
     @Autowired
     private BrandDao brandDao;
+
+    @Autowired
+    private BrandAuditDao brandAuditDao;
 
     @Override
     public List<Brand> findAll() {
@@ -113,5 +118,61 @@ public class BrandServiceImpl implements BrandService {
     public List<Map> selectOptionList() {
         return brandDao.selectOptionList();
     }
+
+    //开始审核
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+        BrandAudit brandAudit = new BrandAudit();
+
+        for (Long id : ids) {
+            brandAudit.setId(id);
+            brandAudit.setBrandStatus(Integer.parseInt(status));
+            brandAuditDao.updateByPrimaryKeySelective(brandAudit);
+        }
+
+    }
+
+
+    //条件的分页审核对象查询
+
+    @Override
+    public PageResult searchAudit(Integer pageNum, Integer pageSize, Brand brand) {
+
+        //条件对象
+        BrandQuery brandQuery = new BrandQuery();
+        //创建内部条件对象
+        BrandQuery.Criteria criteria = brandQuery.createCriteria();
+        //判断名称是否有值
+        if(null != brand.getName() && !"".equals(brand.getName().trim())){
+            criteria.andNameLike("%"+brand.getName().trim()+"%");
+        }
+        //判断首字母
+        if(null != brand.getFirstChar() && !"".equals(brand.getFirstChar().trim())){
+            criteria.andFirstCharEqualTo(brand.getFirstChar().trim());
+        }
+
+        //只展示未审核的品牌
+        BrandAuditQuery brandAuditQuery = new BrandAuditQuery();
+        BrandAuditQuery.Criteria criteria1 = brandAuditQuery.createCriteria();
+        //添加审核条件，审核表状态为"0"
+        criteria1.andBrandStatusEqualTo(0);
+        List<BrandAudit> brandAudits = brandAuditDao.selectByExample(brandAuditQuery);
+        //存储审核表状态为"0"的id集合
+        List<Long> AuditIds = new ArrayList<>();
+        for (BrandAudit brandAudit : brandAudits) {
+            AuditIds.add(brandAudit.getId());
+        }
+        criteria.andIdIn(AuditIds);
+
+        //分页插件
+        PageHelper.startPage(pageNum, pageSize);
+
+        //查询结果集
+        Page<Brand> page = (Page<Brand>) brandDao.selectByExample(brandQuery);
+        //总条数
+        //结果集 select * from tb_brand  limit 开始行,每页数
+        return new PageResult(page.getTotal(), page.getResult());
+    }
+
 
 }
