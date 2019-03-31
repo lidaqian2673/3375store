@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!--配置注解驱动-->
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <!--使用阿里的json转换工具转换字符串，不用jackson-->
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes" value="application/json"/>
+                <property name="features">
+                    <array>
+                        <value>WriteMapNullValue</value>
+                        <value>WriteDateUseDateFormat</value>
+                    </array>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!--配置多媒体解析器-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!--设置编码-->
+        <property name="defaultEncoding" value="utf-8"/>
+        <!--设置最大文件大小-->
+        <property name="maxUploadSize" value="20480000"/>
+    </bean>
+    <!--设置全局超时时间，不检查  check这样可以忽略tomcat启动shunxu-->
+    <!--引入dubbo服务-->
+    <!--告诉注册中心服务器名字-->
+    <dubbo:application name="pinyougou-web-manager"/>
+    <!--注册中心地址-->
+    <dubbo:registry address="zookeeper://192.168.200.128:2181"/>
+    <!--注解包扫描-->
+    <dubbo:annotation package="cn.itcast.core.controller"/>
+
+    <dubbo:consumer timeout="600000" check="false"/>
+
+</beans>
