@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import vo.BrandVo;
 
 public interface BrandDao {
     int countByExample(BrandQuery example);
@@ -32,4 +33,7 @@ public interface BrandDao {
 
     //查询所有品牌 返回List《Map》
     List<Map> selectOptionList();
+
+    //分页查询所有的品牌与品牌审核状态,返回包装类
+    List<BrandVo> selectBrandWithAuditSelective(Brand brand);
 }

@@ -61,17 +61,19 @@
 										  <th class="sorting_asc">品牌ID</th>
 									      <th class="sorting">品牌名称</th>									      
 									      <th class="sorting">品牌首字母</th>									     				
+									      <th class="sorting">审核状态</th>
 					                      <th class="text-center">操作</th>
 			                          </tr>
 			                      </thead>
 			                      <tbody>
 			                          <tr ng-repeat="entity in list">
-			                              <td><input  type="checkbox" ng-click="updateSelection($event,entity.id)"></td>			                              
-				                          <td>{{entity.id}}</td>
-									      <td>{{entity.name}}</td>									     
-		                                  <td>{{entity.firstChar}}</td>		                                 
-		                                  <td class="text-center">                                           
-		                                 	  <button type="button" class="btn bg-olive btn-xs" ng-click="findById(entity.id)" data-toggle="modal" data-target="#editModal"  >修改</button>                                           
+			                              <td><input  type="checkbox" ng-click="updateSelection($event,entity.brand.id)"></td>
+				                          <td>{{entity.brand.id}}</td>
+									      <td>{{entity.brand.name}}</td>
+		                                  <td>{{entity.brand.firstChar}}</td>
+		                                  <td>{{status[entity.brandAudit.brandStatus]}}</td>
+		                                  <td class="text-center">
+		                                 	  <button type="button" class="btn bg-olive btn-xs" ng-click="findById(entity.brand.id)" data-toggle="modal" data-target="#editModal"  >修改</button>
 		                                  </td>
 			                          </tr>
 									  

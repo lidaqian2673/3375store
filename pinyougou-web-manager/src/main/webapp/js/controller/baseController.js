@@ -8,8 +8,10 @@ app.controller("baseController",function($scope){
 		 onChange: function(){ // 当页码、每页显示多少条下拉列表发生变化的时候，自动触发了
 			$scope.reloadList();// 重新加载列表
 		 }
-	}; 
-	
+	};
+
+    // 显示状态
+    $scope.status = ["未审核","审核通过","审核未通过","关闭"];
 	$scope.reloadList = function(){
 		// $scope.findByPage($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
 		$scope.search($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);

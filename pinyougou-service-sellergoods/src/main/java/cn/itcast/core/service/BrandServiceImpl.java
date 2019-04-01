@@ -11,6 +11,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import vo.BrandVo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,20 +95,20 @@ public class BrandServiceImpl implements BrandService {
         //分页插件
         PageHelper.startPage(pageNum, pageSize);
         //条件对象
-        BrandQuery brandQuery = new BrandQuery();
-        //创建内部条件对象
-        BrandQuery.Criteria criteria = brandQuery.createCriteria();
-        //判断名称是否有值
-        if(null != brand.getName() && !"".equals(brand.getName().trim())){
-            criteria.andNameLike("%"+brand.getName().trim()+"%");
-        }
-        //判断首字母
-        if(null != brand.getFirstChar() && !"".equals(brand.getFirstChar().trim())){
-            criteria.andFirstCharEqualTo(brand.getFirstChar().trim());
-        }
+//        BrandQuery brandQuery = new BrandQuery();
+//        //创建内部条件对象
+//        BrandQuery.Criteria criteria = brandQuery.createCriteria();
+//        //判断名称是否有值
+//        if(null != brand.getName() && !"".equals(brand.getName().trim())){
+//            criteria.andNameLike("%"+brand.getName().trim()+"%");
+//        }
+//        //判断首字母
+//        if(null != brand.getFirstChar() && !"".equals(brand.getFirstChar().trim())){
+//            criteria.andFirstCharEqualTo(brand.getFirstChar().trim());
+//        }
 
         //查询结果集
-        Page<Brand> page = (Page<Brand>) brandDao.selectByExample(brandQuery);
+        Page<BrandVo> page = (Page<BrandVo>) brandDao.selectBrandWithAuditSelective(brand);
         //总条数
         //结果集 select * from tb_brand  limit 开始行,每页数
         return new PageResult(page.getTotal(), page.getResult());
