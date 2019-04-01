@@ -54,6 +54,13 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public void add(Brand brand) {
         brandDao.insertSelective(brand);
+        //商家申请
+        Long id = brand.getId();
+        BrandAudit brandAudit = new BrandAudit();
+        brandAudit.setId(id);
+        brandAudit.setBrandStatus(0);
+        brandAuditDao.insertSelective(brandAudit);
+
         //insert into tb_tt (id,name,98个) values (3,haha,null 98个)  执行的效果是一样的 但是执行的效率是一样的
         //insert into tb_tt (id,name) values (3,haha)
         //update tb_tt set id = #{id},name= ......   where id
