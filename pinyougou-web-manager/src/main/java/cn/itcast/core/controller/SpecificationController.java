@@ -17,6 +17,7 @@ import java.util.Map;
  * 规格管理
  *
  */
+@SuppressWarnings("all")
 @RestController
 @RequestMapping("/specification")
 public class SpecificationController {
@@ -61,5 +62,24 @@ public class SpecificationController {
     @RequestMapping("/selectOptionList")
     public List<Map> selectOptionList(){
         return specificationService.selectOptionList();
+    }
+
+
+    //分页查询所有未审核的规格
+    @RequestMapping("/findNotAuditSpec")
+    public PageResult findNotAuditSpecifications(Integer page, Integer rows, @RequestBody Specification specification) {
+        return specificationService.findNotAuditSpecifications(page,rows,specification);
+    }
+
+    //根据id批量审核规格
+    @RequestMapping("/updateStatus")
+    public Result updateStatus(Long[] ids,String status) {
+        try {
+            specificationService.updateStatus(ids, status);
+            return new Result(true, "审核成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, "审核失败");
+        }
     }
 }

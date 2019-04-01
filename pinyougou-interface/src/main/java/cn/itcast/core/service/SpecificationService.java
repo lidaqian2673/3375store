@@ -17,4 +17,8 @@ public interface SpecificationService {
     void update(SpecificationVo vo);
 
     List<Map> selectOptionList();
+
+    PageResult findNotAuditSpecifications(Integer page, Integer rows, Specification specification);
+
+    void updateStatus(Long[] ids, String status);
 }
