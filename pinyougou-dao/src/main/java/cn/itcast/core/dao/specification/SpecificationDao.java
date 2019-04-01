@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import vo.SpecificationVo;
 
 public interface SpecificationDao {
     int countByExample(SpecificationQuery example);
@@ -32,4 +33,7 @@ public interface SpecificationDao {
 
     //查询所有
     List<Map> selectOptionList();
+
+    //规格状态申请
+    List<SpecificationVo> selectSpecWithAuditSelective(Specification specification);
 }

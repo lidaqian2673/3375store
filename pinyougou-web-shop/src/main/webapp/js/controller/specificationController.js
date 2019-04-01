@@ -87,11 +87,10 @@ app.controller('specificationController' ,function($scope,$controller   ,specifi
 		$scope.entity.specificationOptionList.splice(index,1);
 	}
 
-	
+
     // 显示状态
     $scope.status = ["未审核","审核通过","审核未通过","关闭"];
 
     ///$scope.itemCatList = [null,图书、音像、电子书刊,电子书刊,.......   戒指];//1000+
-    //
-    
+    //                 0          1             2  ....         1004
 });	

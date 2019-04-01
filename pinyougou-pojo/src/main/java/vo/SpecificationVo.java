@@ -1,6 +1,7 @@
 package vo;
 
 import cn.itcast.core.pojo.specification.Specification;
+import cn.itcast.core.pojo.specification.SpecificationAudit;
 import cn.itcast.core.pojo.specification.SpecificationOption;
 
 import java.io.Serializable;
@@ -15,6 +16,16 @@ public class SpecificationVo implements Serializable{
     private Specification specification;
     //	规格选项对象结果集 多
     private List<SpecificationOption> specificationOptionList;
+
+    private SpecificationAudit specificationAudit;
+
+    public SpecificationAudit getSpecificationAudit() {
+        return specificationAudit;
+    }
+
+    public void setSpecificationAudit(SpecificationAudit specificationAudit) {
+        this.specificationAudit = specificationAudit;
+    }
 
     public Specification getSpecification() {
         return specification;
