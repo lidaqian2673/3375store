@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 /**
  * 模板管理
  */
@@ -51,5 +53,10 @@ public class TypeTemplateController {
     @RequestMapping("/findOne")
     public TypeTemplate findOne(Long id){
         return typeTemplateService.findOne(id);
+    }
+    //查询一个模板对象
+    @RequestMapping("/findECharts")
+    public Map findECharts(){
+        return typeTemplateService.findECharts();
     }
 }
