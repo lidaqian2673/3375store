@@ -123,8 +123,7 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
         ArrayList<Map> mapList = new ArrayList<>();
         //获取近两个星期日期的集合字符串
         for (int i = 13; i >= 0; i--) {
-//            dateList.add(getFrontDay(new Date(),i));
-            dateList.add(getFrontDay(new Date(2017,7,27),i));
+            dateList.add(getFrontDay(new Date(),i));
         }
         //获取所有一级分类的name属性集合
         ItemCatQuery itemCatQuery = new ItemCatQuery();
@@ -146,7 +145,7 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
             for (String date : dateList) {
                 money = 0;
             //获取属于某一天的订单id
-                ArrayList<Long> OrderIds = null;
+                List<Long> OrderIds = new ArrayList<>();
 //                获取所有订单
                 List<Order> orders = orderDao.selectByExample(null);
 //                如果订单日期是这天就将订单id添加进去
@@ -177,9 +176,9 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
                         }
                     }
                 }
-                Random random = new Random();
                 moneyList.add(money);
-                moneyList.add(random.nextInt(30));
+//                Random random = new Random();
+//                moneyList.add(random.nextInt(30));
             }
                 mingqianHashMap.put("name",itemCat.getName());
                 mingqianHashMap.put("moneyList",moneyList);
