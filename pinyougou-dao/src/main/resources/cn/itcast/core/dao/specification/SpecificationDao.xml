@@ -172,4 +172,22 @@
   <select id="selectOptionList" resultType="Map">
     select id,spec_name text from tb_specification
   </select>
+
+  <!--查询所有规格包含规格状态结果映射-->
+  <resultMap id="specificationVo" type="vo.SpecificationVo" autoMapping="true" >
+    <id property="specification.id" column="id"/>
+    <result property="specification.specName" column="spec_name"/>
+    <result property="specificationAudit.auditStatus" column="audit_status"/>
+  </resultMap>
+  <!--查询所有规格包含规格状态-->
+  <select id="selectSpecWithAuditSelective" parameterType="cn.itcast.core.pojo.specification.Specification" resultMap="specificationVo">
+    select s.*,a.audit_status from tb_specification s INNER JOIN tb_specification_audit a on s.id = a.id
+    <where>
+      <if test="specName != null and specName != '' " >
+        s.spec_name LIKE #{specName,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+
+
 </mapper>
