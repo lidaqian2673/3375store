@@ -9,8 +9,9 @@
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
         http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-    
-    <context:property-placeholder location="classpath:config/application.properties" />
+
+	<!--一直报错注释了-->
+    <!--<context:property-placeholder location="classpath:config/application.properties" />-->
 	
 	<mvc:annotation-driven>
 	  <mvc:message-converters register-defaults="true">

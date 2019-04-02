@@ -1,5 +1,5 @@
  //控制层 
-app.controller('userController' ,function($scope,$controller   ,userService){	
+app.controller('userController' ,function($scope,$controller,userService){
 	$scope.entity = {};
 	//注册用户
 	$scope.reg=function(){

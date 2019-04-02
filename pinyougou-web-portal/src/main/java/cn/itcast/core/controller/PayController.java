@@ -47,9 +47,11 @@ public class PayController {
                 }else{
                     //收尾：改状态
                     //map : 支付成功之后流水号
+                    String transaction_id = map.get("transaction_id");
                     //支付成功的时间
-
-                    return new Result(true,"支付成功");
+                    String name = SecurityContextHolder.getContext().getAuthentication().getName();
+                    payService.update(name,transaction_id);
+                    return new Result(true, "支付成功");
                 }
             }
         } catch (Exception e) {

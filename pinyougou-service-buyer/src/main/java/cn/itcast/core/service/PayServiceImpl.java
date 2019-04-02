@@ -2,6 +2,7 @@ package cn.itcast.core.service;
 
 import cn.itcast.common.utils.HttpClient;
 import cn.itcast.common.utils.IdWorker;
+import cn.itcast.core.dao.log.PayLogDao;
 import cn.itcast.core.pojo.log.PayLog;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.wxpay.sdk.WXPayUtil;
@@ -9,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 支付管理
@@ -32,6 +31,8 @@ public class PayServiceImpl implements PayService {
 
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private PayLogDao payLogDao;
 
 
     //连接微信服务器 Http协议 远程调用
@@ -164,5 +165,16 @@ public class PayServiceImpl implements PayService {
 
         return null;
     }
+
+    //支付成功修改日志状态
+    @Override
+    public void update(String name, String transaction_id) {
+        PayLog payLog = (PayLog) redisTemplate.boundHashOps("payLog").get(name);
+        payLog.setTradeState("1");
+        payLog.setPayTime(new Date());
+        payLog.setTransactionId(transaction_id);
+        payLogDao.updateByPrimaryKeySelective(payLog);
+    }
+
 
 }

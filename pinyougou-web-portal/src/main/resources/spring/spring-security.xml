@@ -21,6 +21,9 @@
 
 		<intercept-url pattern="/itemsearch/*.do" access="IS_AUTHENTICATED_ANONYMOUSLY"></intercept-url>
 
+        <!--轮播图-->
+        <intercept-url pattern="/content/*.do" access="IS_AUTHENTICATED_ANONYMOUSLY"></intercept-url>
+
 
         <intercept-url pattern="/**" access="ROLE_USER"/>
 

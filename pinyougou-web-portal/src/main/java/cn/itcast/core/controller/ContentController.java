@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("/content")
 public class ContentController {
 
-
     @Reference
     private ContentService contentService;
     //根据广告分类ID  查询此分类下所有广告集合

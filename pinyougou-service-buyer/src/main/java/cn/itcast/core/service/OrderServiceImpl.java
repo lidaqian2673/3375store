@@ -6,11 +6,16 @@ import cn.itcast.core.dao.log.PayLogDao;
 import cn.itcast.core.dao.order.OrderDao;
 import cn.itcast.core.dao.order.OrderItemDao;
 import cn.itcast.core.pojo.item.Item;
+import cn.itcast.core.pojo.item.ItemQuery;
 import cn.itcast.core.pojo.log.PayLog;
+import cn.itcast.core.pojo.log.PayLogQuery;
 import cn.itcast.core.pojo.order.Order;
 import cn.itcast.core.pojo.order.OrderItem;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import entity.Cart;
+import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,8 +56,8 @@ public class OrderServiceImpl implements OrderService {
 
         //根据用户名查询此用户的购物车集合（长度）
         List<Cart> cartList = (List<Cart>) redisTemplate.boundHashOps("cart").get(order.getUserId());
-
         //很多订单的金额之和
+
         long payLogTotal = 0;
         //订单ID集合
         List<Long> ids = new ArrayList<>();
@@ -105,9 +110,9 @@ public class OrderServiceImpl implements OrderService {
                 orderItem.setPicPath(item.getImage());
                 //商家ID
                 orderItem.setSellerId(item.getSellerId());
-
                 //保存
                 orderItemDao.insertSelective(orderItem);
+
             }
 
             //设置订单的总金额
@@ -117,6 +122,9 @@ public class OrderServiceImpl implements OrderService {
 
             //保存订单
             orderDao.insertSelective(order);
+            //增加订单到缓存
+
+
 
         }
 
@@ -142,10 +150,29 @@ public class OrderServiceImpl implements OrderService {
 
         payLogDao.insertSelective(payLog);
         //保存缓存一份
-        redisTemplate.boundHashOps("payLog").put(order.getUserId(),payLog);
+        List<PayLog> payLogs = new ArrayList<>();
+        payLogs.add(payLog);
 
+        redisTemplate.boundHashOps("payLog").put(order.getUserId(),payLogs);
         //购物车
         redisTemplate.boundHashOps("cart").delete(order.getUserId());
 
     }
+
+    @Override
+    public PageResult search(Integer page, Integer rows, OrderItem orderItem) {
+        //分页插件
+        PageHelper.startPage(page, rows);
+        //条件对象
+        PayLogQuery payLogQuery = new PayLogQuery();
+        //创建内部条件对象
+        PayLogQuery.Criteria queryCriteria = payLogQuery.createCriteria();
+        //查询结果集
+       Page<PayLog> payLogList = (Page<PayLog>) payLogDao.selectByExample(payLogQuery);
+        //总条数
+        return new PageResult(payLogList.getTotal(), payLogList.getResult());
+
+    }
+
+
 }
