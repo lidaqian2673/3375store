@@ -1,9 +1,13 @@
 package cn.itcast.core.service;
 
+import cn.itcast.core.dao.item.ItemCatAuditDao;
 import cn.itcast.core.dao.item.ItemCatDao;
 import cn.itcast.core.pojo.item.ItemCat;
+import cn.itcast.core.pojo.item.ItemCatAudit;
+import cn.itcast.core.pojo.item.ItemCatAuditQuery;
 import cn.itcast.core.pojo.item.ItemCatQuery;
 import com.alibaba.dubbo.config.annotation.Service;
+import entity.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -15,6 +19,7 @@ import java.util.Map;
 /**
  * 分类管理
  */
+@SuppressWarnings("all")
 @Service
 public class ItemCatServiceImpl implements ItemCatService {
 
@@ -22,6 +27,8 @@ public class ItemCatServiceImpl implements ItemCatService {
     private ItemCatDao itemCatDao;
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private ItemCatAuditDao itemCatAuditDao;
     @Override
     public List<ItemCat> findByParentId(Long parentId) {
 
@@ -93,9 +100,56 @@ public class ItemCatServiceImpl implements ItemCatService {
 
             redisTemplate.boundValueOps("ItemCatList").set(maps);
         }
-
-
-
         return maps;
+    }
+
+//    查询未审核分类集合
+    @Override
+    public List<Map> findAuditList() {
+        ItemCatQuery itemCatQuery = new ItemCatQuery();
+        ItemCatQuery.Criteria criteria = itemCatQuery.createCriteria();
+//        只查询未审核的
+//        在审核表查询未审核的id集合
+        ItemCatAuditQuery itemCatAuditQuery = new ItemCatAuditQuery();
+        itemCatAuditQuery.createCriteria().andItemCatAuditStatusEqualTo(0);
+        List<ItemCatAudit> itemCatAudits = itemCatAuditDao.selectByExample(itemCatAuditQuery);
+        List<Long> ids = new ArrayList<>();
+        for (ItemCatAudit itemCatAudit : itemCatAudits) {
+            ids.add(itemCatAudit.getId());
+        }
+
+        criteria.andIdIn(ids);
+        List<ItemCat> itemCats = itemCatDao.selectByExample(itemCatQuery);
+        ArrayList<Map> maps = new ArrayList<>();
+
+        for (ItemCat itemCat : itemCats) {
+            HashMap<String, Object> resultMap = new HashMap<>();
+//            通过父id查询name属性
+            ItemCat itemCat1 = itemCatDao.selectByPrimaryKey(itemCat.getParentId());
+            resultMap.put("id",itemCat.getId());
+            resultMap.put("name",itemCat.getName());
+            resultMap.put("typeId",itemCat.getTypeId());
+            resultMap.put("parent",itemCat1.getName());
+            maps.add(resultMap);
+        }
+        return maps;
+    }
+
+    @Override
+    public Result updateStatus(Long[] ids, Integer status) {
+        try {
+            ItemCatAudit itemCatAudit = new ItemCatAudit();
+
+            itemCatAudit.setItemCatAuditStatus(status);
+
+            for (Long id : ids){
+                itemCatAudit.setId(id);
+                itemCatAuditDao.updateByPrimaryKeySelective(itemCatAudit);
+            }
+            return new Result(true,"审核成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"审核失败");
+        }
     }
 }
