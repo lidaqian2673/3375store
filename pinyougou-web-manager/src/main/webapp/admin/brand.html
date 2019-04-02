@@ -17,8 +17,9 @@
     <!-- 引入分页相关的JS和CSS -->
     <script type="text/javascript" src="../plugins/angularjs/pagination.js"></script>
     <link rel="stylesheet" href="../plugins/angularjs/pagination.css">
-    
+
     <script type="text/javascript" src="../js/base_pagination.js"></script>
+    <script type="text/javascript" src="../js/service/uploadService.js"></script>
     <script type="text/javascript" src="../js/controller/baseController.js"></script>
     <script type="text/javascript" src="../js/controller/brandController.js"></script>
     <script type="text/javascript" src="../js/service/brandService.js"></script>
@@ -83,12 +84,26 @@
 							  
 							 
                         </div>
+						<!--批量导入excel-->
+                        <div>
+                            <table width="150px">
+                                <tr>
+                                    <b>--批量导入品牌表--</b>
+                                </tr>
+                                <tr>
+                                    <td><input type="file" name="file" ng-model="document.fileInput" id="file"></td>
+                                    <td> <button type="button" ng-click="uploadExcel()" class="btn btn">导入</button>  </td>
+                                </tr>
+
+                            </table>
+
+                        </div>
                         <!-- 数据表格 /-->
                         <!-- 分页 -->
 						<tm-pagination conf="paginationConf"></tm-pagination>
                         
                      </div>
-                     {{selectIds}}
+
                     <!-- /.box-body -->
          
 <!-- 编辑窗口 -->

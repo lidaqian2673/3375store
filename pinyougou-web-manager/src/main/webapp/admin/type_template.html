@@ -20,12 +20,13 @@
     <!-- 引入分页相关的JS和CSS -->
     <script type="text/javascript" src="../plugins/angularjs/pagination.js"></script>
     <link rel="stylesheet" href="../plugins/angularjs/pagination.css">
-    
+
     <script type="text/javascript" src="../js/base_pagination.js"></script>
     <script type="text/javascript" src="../js/controller/baseController.js"></script>
     <script type="text/javascript" src="../js/service/typeTemplateService.js"></script>
     <script type="text/javascript" src="../js/service/brandService.js"></script>
     <script type="text/javascript" src="../js/service/specificationService.js"></script>
+    <script type="text/javascript" src="../js/service/uploadService.js"></script>
     <script type="text/javascript" src="../js/controller/typeTemplateController.js"></script>
     
     <!-- 引入select2的相关的css和js -->
@@ -79,24 +80,39 @@
 									      <th class="sorting">关联品牌</th>
 									      <th class="sorting">关联规格</th>									     
 									      <th class="sorting">扩展属性</th>													     						
+									      <th class="sorting">审核状态</th>
 					                      <th class="text-center">操作</th>
 			                          </tr>
 			                      </thead>
 			                      <tbody>
 			                          <tr ng-repeat="entity in list">
-			                              <td><input  type="checkbox" ng-click="updateSelection($event,entity.id)"></td>			                              
-				                          <td>{{entity.id}}</td>
-									      <td>{{entity.name}}</td>
-									      <td>{{jsonToString(entity.brandIds,'text')}}</td>
-									      <td>{{jsonToString(entity.specIds,'text')}}</td>									 
-									      <td>{{jsonToString(entity.customAttributeItems,'text')}}</td>		                                                                  
-		                                  <td class="text-center">                                           
+			                              <td><input  type="checkbox" ng-click="updateSelection($event,entity.typeTemplate.id)"></td>
+				                          <td>{{entity.typeTemplate.id}}</td>
+									      <td>{{entity.typeTemplate.name}}</td>
+									      <td>{{jsonToString(entity.typeTemplate.brandIds,'text')}}</td>
+									      <td>{{jsonToString(entity.typeTemplate.specIds,'text')}}</td>
+									      <td>{{jsonToString(entity.typeTemplate.customAttributeItems,'text')}}</td>
+									      <td>{{status[entity.typeTemplateAudit.typeTemplateAuditStatus]}}</td>
+		                                  <td class="text-center">
 		                                 	  <button type="button" class="btn bg-olive btn-xs" ng-click="findOne(entity.id)" data-toggle="modal" data-target="#editModal" >修改</button>                                           
 		                                  </td>
 			                          </tr>
 			                      </tbody>
 			                  </table>
-			                  <!--数据列表/-->                        
+			                  <!--数据列表/-->
+							<div>
+								<table width="150px">
+									<tr>
+										<b>--批量导入模板表--</b>
+									</tr>
+									<tr>
+										<td><input type="file" name="file" ng-model="document.fileInput" id="file"></td>
+										<td> <button type="button" ng-click="uploadExcel()" class="btn btn-default">导入</button>  </td>
+									</tr>
+
+								</table>
+
+							</div>
 							  <!-- 分页 -->
 							<tm-pagination conf="paginationConf"></tm-pagination>
 							 

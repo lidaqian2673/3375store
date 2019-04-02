@@ -1,5 +1,5 @@
 // 定义控制器:
-app.controller("brandController",function($scope,$controller,$http,brandService){
+app.controller("brandController",function($scope,$controller,$http,brandService,uploadService){
 	// AngularJS中的继承:伪继承
 	$controller('baseController',{$scope:$scope});
 	
@@ -79,5 +79,25 @@ app.controller("brandController",function($scope,$controller,$http,brandService)
 			$scope.list = response.rows;
 		});
 	}
-	
+
+	$scope.uploadExcel = function() {
+        if(file.files[0]==null) {
+            alert("还没有添加任何的excel表格");
+            return;
+        }
+        if ("品牌表.xls" != file.files[0].name){
+            alert("excel表格名字必须为:品牌表.xls");
+            return;
+        }
+        uploadService.uploadExcel().success(function(response) {
+            if(response.flag){
+                alert('导入成功');
+                file.files=null;
+                $scope.reloadList();
+            }else {
+                alert('导入失败');
+            }
+        })
+    };
+
 });

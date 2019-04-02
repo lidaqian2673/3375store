@@ -12,6 +12,12 @@
     <groupId>cn.itcast</groupId>
     <artifactId>pinyougou-common</artifactId>
     <dependencies>
+        <!--添加excel表格的依赖-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.8</version>
+        </dependency>
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
