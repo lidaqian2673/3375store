@@ -9,6 +9,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import entity.PageResult;
 import org.apache.zookeeper.data.Id;
+import org.junit.internal.matchers.Each;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import vo.SpecificationVo;
@@ -164,6 +165,17 @@ public class SpecificationServiceImpl implements SpecificationService {
         }
 
 
+
+    }
+
+    //删除规格
+    @Override
+    public void delete(Long[] ids) {
+        if (null!=ids&&ids.length>0){
+            for (Long id : ids) {
+                specificationDao.deleteByPrimaryKey(id);
+            }
+        }
 
     }
 }

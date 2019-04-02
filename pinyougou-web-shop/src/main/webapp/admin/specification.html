@@ -68,7 +68,7 @@
 			                      </thead>
 			                      <tbody>
 			                          <tr ng-repeat="entity in list">
-			                              <td><input  type="checkbox" ng-click="updateSelection($event,entity.id)"></td>			                              
+			                              <td><input  type="checkbox" ng-click="updateSelection($event,entity.specification.id)"></td>
 				                          <td>{{entity.specification.id}}</td>
 									      <td>{{entity.specification.specName}}</td>
 										  <td>{{status[entity.specificationAudit.auditStatus]}}</td>
