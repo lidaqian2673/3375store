@@ -23,4 +23,6 @@ public interface TypeTemplateService {
     PageResult searchAudit(Integer page, Integer rows, TypeTemplate typeTemplate);
 
     Result updateStatus(Long[] ids, Integer status);
+
+    void delete(Long[] ids);
 }

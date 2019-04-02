@@ -28,6 +28,7 @@ import entity.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
+import vo.TypeTemplateVo;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -72,7 +73,7 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 
         }
         PageHelper.startPage(page,rows);
-        Page<TypeTemplate> p = (Page<TypeTemplate>) typeTemplateDao.selectByExample(null);
+        Page<TypeTemplateVo> p = (Page<TypeTemplateVo>) typeTemplateDao.selectSpecWithAuditSelective(typeTemplate);
         return new PageResult(p.getTotal(),p.getResult());
     }
 
@@ -80,6 +81,13 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
     @Override
     public void add(TypeTemplate typeTemplate) {
          typeTemplateDao.insertSelective(typeTemplate);
+         //商家申请
+        Long id = typeTemplate.getId();
+        TypeTemplateAudit typeTemplateAudit = new TypeTemplateAudit();
+        typeTemplateAudit.setId(id);
+        typeTemplateAudit.setTypeTemplateAuditStatus(0);
+        typeTemplateAuditDao.insertSelective(typeTemplateAudit);
+
     }
 
     //查询一个模板对象
@@ -258,6 +266,16 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(false,"审核失败");
+        }
+    }
+
+    //删除
+    @Override
+    public void delete(Long[] ids) {
+        if (null!=ids&&ids.length>0){
+            for (Long id : ids) {
+                typeTemplateDao.deleteByPrimaryKey(id);
+            }
         }
     }
 }
