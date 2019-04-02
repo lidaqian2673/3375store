@@ -1,4 +1,4 @@
-app.controller("contentController",function($scope,contentService){
+app.controller("contentController",function($scope,contentService,itemCatService){
 
 	//数组
 	$scope.contentList = [];
@@ -13,15 +13,21 @@ app.controller("contentController",function($scope,contentService){
 	}
 
 
-
-
-
 	//搜索  （传递参数）
 	$scope.search=function(){
 		location.href="http://localhost:9003/search.html#?keywords="+$scope.keywords;
 	}
 
 
+	//获取商品分类信息
+    $scope.findItemCatList=function(){
+        itemCatService.findItemCatList().success(function (response){
+            $scope.MapList = response;
+        });
+	}
 
-	
+    $scope.search1=function(key){
+        location.href="http://localhost:9003/search.html#?keywords="+key;
+    }
+
 });

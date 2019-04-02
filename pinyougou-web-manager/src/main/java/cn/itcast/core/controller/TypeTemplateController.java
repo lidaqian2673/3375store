@@ -54,7 +54,7 @@ public class TypeTemplateController {
     public TypeTemplate findOne(Long id){
         return typeTemplateService.findOne(id);
     }
-    //查询一个模板对象
+    //用于订单统计的方法
     @RequestMapping("/findECharts")
     public Map findECharts(){
         return typeTemplateService.findECharts();

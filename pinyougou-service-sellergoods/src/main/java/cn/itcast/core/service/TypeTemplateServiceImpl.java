@@ -113,7 +113,7 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 
         return listMap;
     }
-
+    //用于订单统计的方法
     @Override
     public Map findECharts() {
         HashMap<Object, Object> resultMap = new HashMap<>();
