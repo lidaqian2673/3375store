@@ -2,10 +2,10 @@ package cn.itcast.core.service;
 
 import cn.itcast.core.dao.good.GoodsDao;
 import cn.itcast.core.dao.item.ItemCatDao;
-import cn.itcast.core.dao.item.ItemDao;
 import cn.itcast.core.dao.order.OrderDao;
 import cn.itcast.core.dao.order.OrderItemDao;
 import cn.itcast.core.dao.specification.SpecificationOptionDao;
+import cn.itcast.core.dao.template.TypeTemplateAuditDao;
 import cn.itcast.core.dao.template.TypeTemplateDao;
 import cn.itcast.core.pojo.good.Goods;
 import cn.itcast.core.pojo.good.GoodsQuery;
@@ -16,11 +16,15 @@ import cn.itcast.core.pojo.order.OrderItem;
 import cn.itcast.core.pojo.order.OrderItemQuery;
 import cn.itcast.core.pojo.specification.SpecificationOptionQuery;
 import cn.itcast.core.pojo.template.TypeTemplate;
+import cn.itcast.core.pojo.template.TypeTemplateAudit;
+import cn.itcast.core.pojo.template.TypeTemplateAuditQuery;
+import cn.itcast.core.pojo.template.TypeTemplateQuery;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import entity.PageResult;
+import entity.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,8 +46,6 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
-    private ItemDao itemDao;
-    @Autowired
     private ItemCatDao itemCatDao;
     @Autowired
     private GoodsDao goodsDao;
@@ -51,6 +53,8 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
     private OrderItemDao orderItemDao;
     @Autowired
     private OrderDao orderDao;
+    @Autowired
+    private TypeTemplateAuditDao typeTemplateAuditDao;
 
     //查询分页对象
     @Override
@@ -210,5 +214,50 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
         SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
         String s = sdf.format(resultDate).toString();
         return s;
+    }
+
+    @Override
+    public PageResult searchAudit(Integer page, Integer rows, TypeTemplate typeTemplate) {
+
+        TypeTemplateQuery typeTemplateQuery = new TypeTemplateQuery();
+        TypeTemplateQuery.Criteria criteria = typeTemplateQuery.createCriteria();
+//        判断模板名称是否为空，根据模板名称条件查询
+        if (null!=typeTemplate&&!"".equals(typeTemplate)){
+            if (null!=typeTemplate.getName()&&!"".equals(typeTemplate.getName())){
+                criteria.andNameLike("%"+typeTemplate.getName()+"%");
+            }
+        }
+//        只查询未审核的
+//        在审核表查询未审核的id集合
+        TypeTemplateAuditQuery typeTemplateAuditQuery = new TypeTemplateAuditQuery();
+        typeTemplateAuditQuery.createCriteria().andTypeTemplateAuditStatusEqualTo(0);
+        List<TypeTemplateAudit> typeTemplateAudits = typeTemplateAuditDao.selectByExample(typeTemplateAuditQuery);
+        List<Long> ids = new ArrayList<>();
+        for (TypeTemplateAudit typeTemplateAudit : typeTemplateAudits) {
+            ids.add(typeTemplateAudit.getId());
+        }
+
+        criteria.andIdIn(ids);
+        PageHelper.startPage(page,rows);
+        Page<TypeTemplate> p = (Page<TypeTemplate>) typeTemplateDao.selectByExample(typeTemplateQuery);
+        return new PageResult(p.getTotal(),p.getResult());
+    }
+
+    @Override
+    public Result updateStatus(Long[] ids, Integer status) {
+        try {
+            TypeTemplateAudit typeTemplateAudit = new TypeTemplateAudit();
+
+            typeTemplateAudit.setTypeTemplateAuditStatus(status);
+
+            for (Long id : ids){
+                typeTemplateAudit.setId(id);
+              typeTemplateAuditDao.updateByPrimaryKeySelective(typeTemplateAudit);
+            }
+            return new Result(true,"审核成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"审核失败");
+        }
     }
 }

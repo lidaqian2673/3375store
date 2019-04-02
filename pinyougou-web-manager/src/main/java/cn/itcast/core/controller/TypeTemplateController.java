@@ -59,4 +59,16 @@ public class TypeTemplateController {
     public Map findECharts(){
         return typeTemplateService.findECharts();
     }
+
+    //查询分页 有条件 用于审核
+    @RequestMapping("/searchAudit")
+    public PageResult searchAudit(Integer page, Integer rows, @RequestBody TypeTemplate typeTemplate){
+        return typeTemplateService.searchAudit(page,rows,typeTemplate);
+    }
+    //更改审核状态
+    @RequestMapping("/updateStatus")
+    public Result updateStatus(Long[] ids, Integer status){
+        return typeTemplateService.updateStatus(ids,status);
+    }
+
 }

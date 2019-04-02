@@ -54,37 +54,48 @@ public class ItemCatServiceImpl implements ItemCatService {
     //查询商品分类信息
     @Override
     public List<Map> findItemCatList() {
-        List<Map> maps = new ArrayList<>();
+//        从缓存取出商品分类信息
+        List<Map> maps = (List<Map>) redisTemplate.boundValueOps("ItemCatList").get();
 
-//        查询父id为0的分类
-        ItemCatQuery itemCatQuery = new ItemCatQuery();
-        itemCatQuery.createCriteria().andParentIdEqualTo(0l);
-        List<ItemCat> itemCats = itemCatDao.selectByExample(itemCatQuery);
+//        缓存没有就从数据库查一份放进去
+        if (null == maps||maps.size()==0){
+            maps = new ArrayList<>();
+
+            //        查询父id为0的分类
+            ItemCatQuery itemCatQuery = new ItemCatQuery();
+            itemCatQuery.createCriteria().andParentIdEqualTo(0l);
+            List<ItemCat> itemCats = itemCatDao.selectByExample(itemCatQuery);
 //        遍历所有顶层分类分别与下级分类组成map
-        for (ItemCat itemCat : itemCats) {
-            HashMap<String, Object> upperMap = new HashMap<>();
-            List<Map> lowerMaps = new ArrayList<>();
-            ItemCatQuery itemCatQuery1 = new ItemCatQuery();
-            itemCatQuery1.createCriteria().andParentIdEqualTo(itemCat.getId());
-            List<ItemCat> itemCats1 = itemCatDao.selectByExample(itemCatQuery1);
+            for (ItemCat itemCat : itemCats) {
+                HashMap<String, Object> upperMap = new HashMap<>();
+                List<Map> lowerMaps = new ArrayList<>();
+                ItemCatQuery itemCatQuery1 = new ItemCatQuery();
+                itemCatQuery1.createCriteria().andParentIdEqualTo(itemCat.getId());
+                List<ItemCat> itemCats1 = itemCatDao.selectByExample(itemCatQuery1);
 //            遍历所有中层分类分别与下级分类组成map
-            for (ItemCat cat : itemCats1) {
-                ArrayList<String> list = new ArrayList<>();
-                HashMap<String, Object> lowerMap = new HashMap<>();
-                ItemCatQuery itemCatQuery2 = new ItemCatQuery();
-                itemCatQuery2.createCriteria().andParentIdEqualTo(cat.getId());
-                List<ItemCat> itemCats2 = itemCatDao.selectByExample(itemCatQuery2);
-                for (ItemCat itemCat1 : itemCats2) {
-                    list.add(itemCat1.getName());
+                for (ItemCat cat : itemCats1) {
+                    ArrayList<String> list = new ArrayList<>();
+                    HashMap<String, Object> lowerMap = new HashMap<>();
+                    ItemCatQuery itemCatQuery2 = new ItemCatQuery();
+                    itemCatQuery2.createCriteria().andParentIdEqualTo(cat.getId());
+                    List<ItemCat> itemCats2 = itemCatDao.selectByExample(itemCatQuery2);
+                    for (ItemCat itemCat1 : itemCats2) {
+                        list.add(itemCat1.getName());
+                    }
+                    lowerMap.put("itemCatName",cat.getName());
+                    lowerMap.put("itemCatList",list);
+                    lowerMaps.add(lowerMap);
                 }
-                lowerMap.put("itemCatName",cat.getName());
-                lowerMap.put("itemCatList",list);
-                lowerMaps.add(lowerMap);
+                upperMap.put("ItemCatName",itemCat.getName());
+                upperMap.put("ItemCatList",lowerMaps);
+                maps.add(upperMap);
             }
-            upperMap.put("ItemCatName",itemCat.getName());
-            upperMap.put("ItemCatList",lowerMaps);
-            maps.add(upperMap);
+
+            redisTemplate.boundValueOps("ItemCatList").set(maps);
         }
+
+
+
         return maps;
     }
 }
