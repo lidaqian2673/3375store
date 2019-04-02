@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 /**
  * 模板管理
  */
@@ -52,4 +54,21 @@ public class TypeTemplateController {
     public TypeTemplate findOne(Long id){
         return typeTemplateService.findOne(id);
     }
+    //用于订单统计的方法
+    @RequestMapping("/findECharts")
+    public Map findECharts(){
+        return typeTemplateService.findECharts();
+    }
+
+    //查询分页 有条件 用于审核
+    @RequestMapping("/searchAudit")
+    public PageResult searchAudit(Integer page, Integer rows, @RequestBody TypeTemplate typeTemplate){
+        return typeTemplateService.searchAudit(page,rows,typeTemplate);
+    }
+    //更改审核状态
+    @RequestMapping("/updateStatus")
+    public Result updateStatus(Long[] ids, Integer status){
+        return typeTemplateService.updateStatus(ids,status);
+    }
+
 }

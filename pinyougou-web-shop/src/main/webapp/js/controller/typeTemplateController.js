@@ -1,5 +1,5 @@
 //控制层 
-app.controller('typeTemplateController' ,function($scope,$controller,brandService ,specificationService ,typeTemplateService,uploadService){
+app.controller('typeTemplateController' ,function($scope,$controller,brandService ,specificationService  ,typeTemplateService){	
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -109,28 +109,6 @@ app.controller('typeTemplateController' ,function($scope,$controller,brandServic
 		$scope.entity.customAttributeItems.splice(index,1);
 	}
 
-	//批量导入
-    $scope.uploadExcel = function() {
-        if(file.files[0]==null) {
-            alert("还没有添加任何的excel表格");
-            return;
-        }
-        if ("模板表.xls" != file.files[0].name){
-            alert("excel表格名字必须为:模板表.xls");
-            return;
-        }
-        uploadService.uploadExcel().success(function(response) {
-            if(response.flag){
-                alert('导入成功');
-                $scope.reloadList();
-            }else {
-                alert('导入失败');
-            }
-        })
-    };
-
-
-
-
-
+    // 显示状态
+    $scope.status = ["未审核","审核通过","审核未通过","关闭"];
 });	

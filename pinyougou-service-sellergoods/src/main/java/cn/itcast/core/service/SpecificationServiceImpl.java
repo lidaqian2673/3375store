@@ -8,6 +8,8 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import entity.PageResult;
+import org.apache.zookeeper.data.Id;
+import org.junit.internal.matchers.Each;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import vo.SpecificationVo;
@@ -33,18 +35,28 @@ public class SpecificationServiceImpl implements SpecificationService {
     public PageResult search(Integer page, Integer rows, Specification specification) {
         PageHelper.startPage(page,rows);
 
-        Page<Specification> p = (Page<Specification>) specificationDao.selectByExample(null);
+        Page<SpecificationVo> p = (Page<SpecificationVo>) specificationDao.selectSpecWithAuditSelective(specification);
 
         return new PageResult(p.getTotal(),p.getResult());
     }
+
 
     //添加
     @Override
     public void add(SpecificationVo vo) {
         //规格表 并返回ID
-        specificationDao.insertSelective(vo.getSpecification());
 
- 
+        Specification specification = vo.getSpecification();
+        specificationDao.insertSelective(specification);
+
+        Long id = specification.getId();
+        SpecificationAudit specificationAudit = new SpecificationAudit();
+        specificationAudit.setId(id);
+        specificationAudit.setAuditStatus(0);
+        specificationAuditDao.insertSelective(specificationAudit);
+
+
+
         //规格选项表
         List<SpecificationOption> specificationOptionList = vo.getSpecificationOptionList();
         for (SpecificationOption specificationOption : specificationOptionList) {
@@ -52,7 +64,8 @@ public class SpecificationServiceImpl implements SpecificationService {
             specificationOption.setSpecId(vo.getSpecification().getId());
             specificationOptionDao.insertSelective(specificationOption);
         }
-        
+
+
 
     }
 
@@ -152,6 +165,17 @@ public class SpecificationServiceImpl implements SpecificationService {
         }
 
 
+
+    }
+
+    //删除规格
+    @Override
+    public void delete(Long[] ids) {
+        if (null!=ids&&ids.length>0){
+            for (Long id : ids) {
+                specificationDao.deleteByPrimaryKey(id);
+            }
+        }
 
     }
 }

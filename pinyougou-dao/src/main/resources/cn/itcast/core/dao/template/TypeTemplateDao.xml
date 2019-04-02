@@ -110,7 +110,7 @@
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{specIds,jdbcType=VARCHAR}, 
       #{brandIds,jdbcType=VARCHAR}, #{customAttributeItems,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="cn.itcast.core.pojo.template.TypeTemplate" >
+  <insert id="insertSelective" parameterType="cn.itcast.core.pojo.template.TypeTemplate" useGeneratedKeys="true" keyProperty="id">
     insert into tb_type_template
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -213,4 +213,26 @@
       custom_attribute_items = #{customAttributeItems,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <!--查询所有规格包含规格状态结果映射-->
+  <resultMap id="typeTemplateVo" type="vo.TypeTemplateVo" autoMapping="true" >
+    <id property="typeTemplate.id" column="id"/>
+    <result property="typeTemplate.name" column="name"/>
+    <result property="typeTemplate.specIds" column="spec_ids"/>
+    <result property="typeTemplate.brandIds" column="brand_ids"/>
+    <result property="typeTemplate.customAttributeItems" column="custom_attribute_items"/>
+
+    <result property="typeTemplateAudit.typeTemplateAuditStatus" column="type_template_audit_status"/>
+  </resultMap>
+  <!--查询所有规格包含规格状态-->
+  <select id="selectSpecWithAuditSelective" parameterType="cn.itcast.core.pojo.template.TypeTemplate" resultMap="typeTemplateVo">
+    select t.*,a.type_template_audit_status from tb_type_template t INNER JOIN tb_type_template_audit a on t.id = a.id
+    <where>
+      <if test="name != null and name != '' " >
+        t.name LIKE #{name,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+
+
 </mapper>

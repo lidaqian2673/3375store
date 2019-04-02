@@ -1,5 +1,5 @@
  //控制层 
-app.controller('specificationController' ,function($scope,$controller   ,specificationService ,uploadService){
+app.controller('specificationController' ,function($scope,$controller   ,specificationService){	
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -87,29 +87,10 @@ app.controller('specificationController' ,function($scope,$controller   ,specifi
 		$scope.entity.specificationOptionList.splice(index,1);
 	}
 
-	
-    // 显示状态
 
+    // 显示状态
+    $scope.status = ["未审核","审核通过","审核未通过","关闭"];
 
     ///$scope.itemCatList = [null,图书、音像、电子书刊,电子书刊,.......   戒指];//1000+
-    //
-    $scope.uploadExcel = function() {
-        if(file.files[0]==null) {
-            alert("还没有添加任何的excel表格");
-            return;
-        }
-        if ("规格表.xls" != file.files[0].name){
-            alert("excel表格名字必须为:规格表.xls");
-            return;
-        }
-        uploadService.uploadExcel().success(function(response) {
-            if(response.flag){
-                alert('导入成功');
-                file.files=null;
-                $scope.reloadList();
-            }else {
-                alert('导入失败');
-            }
-        })
-    };
+    //                 0          1             2  ....         1004
 });	

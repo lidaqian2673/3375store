@@ -21,4 +21,6 @@ public interface SpecificationService {
     PageResult findNotAuditSpecifications(Integer page, Integer rows, Specification specification);
 
     void updateStatus(Long[] ids, String status);
+
+    void delete(Long[] ids);
 }

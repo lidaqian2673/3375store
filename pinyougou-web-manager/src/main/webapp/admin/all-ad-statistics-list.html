@@ -1,0 +1,74 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>新订单销售额</title>
+    <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+    <!-- ECharts单文件引入 -->
+    <script src="../js/echarts.min.js"></script>
+</head>
+<body>
+<div id="chartmain" style="width: 600px; height: 400px;"></div>
+</body>
+<script type="text/javascript">
+    //初始化echarts
+    function chushihua(myChart){
+        var option = {
+            title:{
+                text:'当天各分类交易额占比'
+            },
+            series:[{
+                name:'访问量',
+                type:'pie',
+                radius:'90%',
+                data:[
+                    {value:0,name:'无'},
+                ]
+            }]
+        };
+
+        myChart.setOption(option);
+    }
+
+    //从数据库读取数据赋值给echarts
+    function fuzhi(myChart){
+        $.ajax({
+            contentType : "application/json",
+            type : "GET",
+            url : "../typeTemplate/findECharts.do",
+            dataType : "json",
+            success : function(data) {
+                //创建一个数组，用来装对象传给series.data，因为series.data里面不能直接鞋for循环
+                var servicedata=[];
+
+                for(var i=0;i<data.mapList.length;i++){
+                    var obj=new Object();
+                    obj.name=data.mapList[i].name;
+                    obj.value=data.mapList[i].moneyList[0];
+                    servicedata[i]=obj;
+                }
+
+                myChart.setOption({
+                    title:{
+                        text:'当天各分类交易额占比'
+                    },
+                    series:[{
+                        name:'访问量',
+                        type:'pie',
+                        radius:'60%',
+                        data:servicedata,
+                    }]
+
+                });
+
+            }
+        });
+    }
+
+    //初始化echarts实例
+    var myChart = echarts.init(document.getElementById('chartmain'));
+    chushihua(myChart);
+    fuzhi(myChart);
+
+</script>
+</html>

@@ -26,6 +26,7 @@ public class TypeTemplateController {
     //查询分页 有条件
     @RequestMapping("/search")
     public PageResult search(Integer page, Integer rows, @RequestBody TypeTemplate typeTemplate){
+
         return typeTemplateService.search(page,rows,typeTemplate);
     }
     //添加
@@ -60,4 +61,19 @@ public class TypeTemplateController {
     public List<Map> findBySpecList(Long id){
         return typeTemplateService.findBySpecList(id);
     }
+
+
+    //删除
+    @RequestMapping("/delete")
+    public Result delete(Long [] ids){
+        try {
+            typeTemplateService.delete(ids);
+            return new Result(true,"删除成功");
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return new Result(false,"删除失败");
+        }
+    }
+
+
 }

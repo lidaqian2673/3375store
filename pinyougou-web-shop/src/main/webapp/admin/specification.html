@@ -19,9 +19,8 @@
     <!-- 引入分页相关的JS和CSS -->
     <script type="text/javascript" src="../plugins/angularjs/pagination.js"></script>
     <link rel="stylesheet" href="../plugins/angularjs/pagination.css">
-
+    
     <script type="text/javascript" src="../js/base_pagination.js"></script>
-    <script type="text/javascript" src="../js/service/uploadService.js"></script>
     <script type="text/javascript" src="../js/controller/baseController.js"></script>
     <script type="text/javascript" src="../js/service/specificationService.js"></script>
     <script type="text/javascript" src="../js/controller/specificationController.js"></script>
@@ -33,7 +32,6 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">规格管理</h3>
                     </div>
-
                     <div class="box-body">
                         <!-- 数据表格 -->
                         <div class="table-box">
@@ -65,8 +63,7 @@
 			                              </th> 
 										  <th class="sorting_asc">规格ID</th>
 									      <th class="sorting">规格名称</th>									     												
-									      <th class="sorting">状态</th>
-					                      <th class="text-center">操作</th>
+					                      <th class="sorting">审核状态</th>
 			                          </tr>
 			                      </thead>
 			                      <tbody>
@@ -75,29 +72,13 @@
 				                          <td>{{entity.specification.id}}</td>
 									      <td>{{entity.specification.specName}}</td>
 										  <td>{{status[entity.specificationAudit.auditStatus]}}</td>
-		                                  <td class="text-center">                                           
-		                                 	  <button type="button" class="btn bg-olive btn-xs" ng-click="findOne(entity.specification.id)" data-toggle="modal" data-target="#editModal">修改</button>
-		                                  </td>
 			                          </tr>
 			                      </tbody>
 			                  </table>
 			                  <!--数据列表/-->    
                         </div>
                         <!-- 数据表格 /-->
-						<!--批量导入excel-->
-						<div>
-							<table width="150px">
-								<tr>
-									<b>--批量导入规格表--</b>
-								</tr>
-								<tr>
-									<td><input type="file" name="file" ng-model="document.fileInput" id="file"></td>
-									<td> <button type="button" ng-click="uploadExcel()" class="btn btn-default">导入</button>  </td>
-								</tr>
-
-							</table>
-
-						</div>
+						<!--批量导入excel规格与规格选项-->
 
                         <!-- 分页 -->
 						<tm-pagination conf="paginationConf"></tm-pagination>

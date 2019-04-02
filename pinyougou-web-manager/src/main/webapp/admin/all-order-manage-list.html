@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>新订单销售额</title>
+    <script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+    <!-- ECharts单文件引入 -->
+    <script src="../js/echarts.min.js"></script>
+</head>
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="box" style="height:700px;width: 1300px;padding: 20px"></div>
+
+<script>
+
+    var option = {
+        // 标题
+
+        title: {
+            text: '近两星期各类商品销售额',
+            subtext: '数据来源：杨贺'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        //图例名
+        legend: {
+            data:[]
+        },
+        grid: {
+            left: '3%',   //图表距边框的距离
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        //工具框，可以选择
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        //x轴信息样式
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: [],
+            //坐标轴颜色
+            axisLine:{
+                lineStyle:{
+                    color:'black'
+                }
+            },
+            //x轴文字旋转
+            axisLabel:{
+                rotate:30,
+                interval:0
+            },
+        },
+
+        yAxis : [
+            {
+                type : 'value',
+                axisLabel : {
+                    formatter: '{value}万'
+                }
+            }
+        ],
+        series: []
+
+    };
+
+
+    $(function(){
+
+             var maplist  = new Array();
+            var seriesList = new Array();
+             $.ajax({
+                 type: 'get',
+                 url:"../typeTemplate/findECharts.do",
+                 dataType:'json',
+                 success:function(data){
+                     option.xAxis.data = data.dateList;
+
+                     option.legend.data = data.nameList;
+
+                     maplist = data.mapList;
+                     seriesList = new Array();
+                     for(var i=0;i<maplist.length;i++){
+                          var currentMap = maplist[i];
+                          var col = 33*i*i;
+                        seriesList[i]=
+                            {
+                                name:currentMap.name,
+                                type:'line',
+                                symbol:'circle',
+                                symbolSize:4,
+                                itemStyle:{
+                                    normal:{
+                                        color:'#'+col,
+                                        borderColor:'#'+col  //拐点边框颜色
+                                    }
+                                },
+                                data:currentMap.moneyList
+                            }
+                    }
+                    option.series = seriesList;
+                     // 获取到这个DOM节点，然后初始化
+                    var myChart = echarts.init(document.getElementById("box"));
+
+                    myChart.setOption(option);
+                }
+            })
+
+
+    })
+
+
+</script>
+
+</body>
+
+</html>

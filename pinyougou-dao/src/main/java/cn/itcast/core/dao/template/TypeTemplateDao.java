@@ -4,6 +4,7 @@ import cn.itcast.core.pojo.template.TypeTemplate;
 import cn.itcast.core.pojo.template.TypeTemplateQuery;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import vo.TypeTemplateVo;
 
 public interface TypeTemplateDao {
     int countByExample(TypeTemplateQuery example);
@@ -27,4 +28,7 @@ public interface TypeTemplateDao {
     int updateByPrimaryKeySelective(TypeTemplate record);
 
     int updateByPrimaryKey(TypeTemplate record);
+
+    //模板审核
+    List<TypeTemplateVo> selectSpecWithAuditSelective(TypeTemplate typeTemplate);
 }
