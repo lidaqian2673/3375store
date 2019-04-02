@@ -87,4 +87,9 @@ public class UserServiceImpl implements  UserService {
 
 
     }
+
+    @Override
+    public void updateInfo(User user) {
+        userDao.insertSelective(user);
+    }
 }

@@ -56,8 +56,24 @@ public class UserController {
                 e.printStackTrace();
                 return new Result(false,"注册失败");
             }
-
-
-
     }
+
+    //添加
+    @RequestMapping("/updateInfo")
+    public Result updateInfo(@RequestBody User user){
+
+        try {
+            //if(null user.getUsername())
+
+
+            userService.updateInfo(user);
+            return new Result(true,"注册成功");
+        } catch (RuntimeException e) {
+            return new Result(false,e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,"注册失败");
+        }
+    }
+
 }
