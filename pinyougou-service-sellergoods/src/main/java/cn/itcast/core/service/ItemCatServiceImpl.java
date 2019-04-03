@@ -10,6 +10,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 import entity.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import vo.ItemCatVo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ public class ItemCatServiceImpl implements ItemCatService {
     @Autowired
     private ItemCatAuditDao itemCatAuditDao;
     @Override
-    public List<ItemCat> findByParentId(Long parentId) {
+    public List<ItemCatVo> findByParentId(Long parentId) {
 
         //1:从Mysql数据库将所有数据查询出来 保存到缓存中一份
         List<ItemCat> itemCats = itemCatDao.selectByExample(null);
@@ -43,7 +44,20 @@ public class ItemCatServiceImpl implements ItemCatService {
         //正常商品分类列表查询
         ItemCatQuery itemCatQuery = new ItemCatQuery();
         itemCatQuery.createCriteria().andParentIdEqualTo(parentId);
-        return itemCatDao.selectByExample(itemCatQuery);
+
+        //商家后台分类申请
+        List<ItemCat> itemCats1 = itemCatDao.selectByExample(itemCatQuery);
+        List<ItemCatVo>itemCatVoList=new ArrayList<>();
+        for (ItemCat itemCat : itemCats1) {
+            ItemCatVo itemCatVo = new ItemCatVo();
+            itemCatVo.setItemCat(itemCat);
+            ItemCatAudit itemCatAudit = itemCatAuditDao.selectByPrimaryKey(itemCat.getId());
+            itemCatVo.setItemCatAudit(itemCatAudit);
+            itemCatVoList.add(itemCatVo);
+        }
+
+        return itemCatVoList;
+
     }
 
 
@@ -151,5 +165,16 @@ public class ItemCatServiceImpl implements ItemCatService {
             e.printStackTrace();
             return new Result(false,"审核失败");
         }
+    }
+    //保存
+    @Override
+    public void add(ItemCat itemCat) {
+
+        itemCatDao.insertSelective(itemCat);
+        Long id = itemCat.getId();
+        ItemCatAudit itemCatAudit = new ItemCatAudit();
+        itemCatAudit.setId(id);
+        itemCatAudit.setItemCatAuditStatus(0);
+        itemCatAuditDao.insertSelective(itemCatAudit);
     }
 }

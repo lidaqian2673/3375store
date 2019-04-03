@@ -3,8 +3,11 @@ package cn.itcast.core.controller;
 import cn.itcast.core.pojo.item.ItemCat;
 import cn.itcast.core.service.ItemCatService;
 import com.alibaba.dubbo.config.annotation.Reference;
+import entity.Result;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import vo.ItemCatVo;
 
 import javax.xml.ws.RequestWrapper;
 import java.util.List;
@@ -21,7 +24,7 @@ public class ItemCatController {
     private ItemCatService itemCatService;
     //查询所有二级分类
     @RequestMapping("/findByParentId")
-    public List<ItemCat> findByParentId(Long parentId){
+    public List<ItemCatVo> findByParentId(Long parentId){
 
         //Long parentId  0 查询所有一级分类
         //Long parentId  1 查询父ID为1的所有二级分页
@@ -38,5 +41,18 @@ public class ItemCatController {
     @RequestMapping("/findAll")
     public List<ItemCat> findAll(){
         return itemCatService.findAll();
+    }
+
+    //添加
+    @RequestMapping("/add")
+    public Result add(@RequestBody ItemCat itemCat) {
+        //保存
+        try {
+            itemCatService.add(itemCat);
+            return new Result(true, "保存成功");
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return new Result(false, "保存失败");
+        }
     }
 }

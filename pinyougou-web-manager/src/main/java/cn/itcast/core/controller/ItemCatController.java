@@ -6,6 +6,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import entity.Result;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import vo.ItemCatVo;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class ItemCatController {
     private ItemCatService itemCatService;
     //查询所有二级分类
     @RequestMapping("/findByParentId")
-    public List<ItemCat> findByParentId(Long parentId){
+    public List<ItemCatVo> findByParentId(Long parentId){
 
         //Long parentId  0 查询所有一级分类
         //Long parentId  1 查询父ID为1的所有二级分页

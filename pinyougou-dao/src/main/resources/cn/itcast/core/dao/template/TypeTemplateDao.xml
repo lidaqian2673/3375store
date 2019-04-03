@@ -214,7 +214,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
-  <!--查询所有规格包含规格状态结果映射-->
+  <!--查询所有模板包含模板状态结果映射-->
   <resultMap id="typeTemplateVo" type="vo.TypeTemplateVo" autoMapping="true" >
     <id property="typeTemplate.id" column="id"/>
     <result property="typeTemplate.name" column="name"/>
@@ -224,7 +224,7 @@
 
     <result property="typeTemplateAudit.typeTemplateAuditStatus" column="type_template_audit_status"/>
   </resultMap>
-  <!--查询所有规格包含规格状态-->
+  <!--查询所有模板包含模板状态-->
   <select id="selectSpecWithAuditSelective" parameterType="cn.itcast.core.pojo.template.TypeTemplate" resultMap="typeTemplateVo">
     select t.*,a.type_template_audit_status from tb_type_template t INNER JOIN tb_type_template_audit a on t.id = a.id
     <where>

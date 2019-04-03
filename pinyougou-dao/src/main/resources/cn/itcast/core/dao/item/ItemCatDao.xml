@@ -109,7 +109,7 @@
     values (#{id,jdbcType=BIGINT}, #{parentId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
       #{typeId,jdbcType=BIGINT})
   </insert>
-  <insert id="insertSelective" parameterType="cn.itcast.core.pojo.item.ItemCat" >
+  <insert id="insertSelective" parameterType="cn.itcast.core.pojo.item.ItemCat" useGeneratedKeys="true" keyProperty="id">
     insert into tb_item_cat
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -198,4 +198,26 @@
       type_id = #{typeId,jdbcType=BIGINT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <!--&lt;!&ndash;查询所有分类包含模板状态结果映射&ndash;&gt;-->
+  <!--<resultMap id="itemCatVo" type="vo.ItemCatVo" autoMapping="true" >-->
+    <!--<id property="itemCat.id" column="id"/>-->
+    <!--<result property="itemCat.parentId" column="parent_id"/>-->
+    <!--<result property="itemCat.name" column="name"/>-->
+    <!--<result property="itemCat.typeId" column="type_id"/>-->
+
+    <!--<result property="itemCatAudit.itemCatAuditStatus" column="item_cat_audit_status"/>-->
+  <!--</resultMap>-->
+  <!--&lt;!&ndash;查询所有分类包含模板状态&ndash;&gt;-->
+  <!--<select id="selectSpecWithAuditSelective" parameterType="cn.itcast.core.pojo.item.ItemCat" resultMap="itemCatVo">-->
+    <!--select i.*,a.item_cat_audit_status from tb_item_cat i INNER JOIN tb_item_cat_audit a on i.id = a.id-->
+    <!--<where>-->
+      <!--<if test="name != null and name != '' " >-->
+        <!--i.name LIKE #{name,jdbcType=VARCHAR}-->
+      <!--</if>-->
+    <!--</where>-->
+  <!--</select>-->
+
+
 </mapper>
