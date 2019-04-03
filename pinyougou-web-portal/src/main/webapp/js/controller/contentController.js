@@ -6,11 +6,20 @@ app.controller("contentController",function($scope,contentService,itemCatService
 
 	// 根据分类ID查询广告的方法:
 	//入参：categoryId 分类Id  1 轮播图 2 今天  3 活动。。。
-	$scope.findByCategoryId = function(categoryId){
-		contentService.findByCategoryId(categoryId).success(function(response){
-			$scope.contentList[categoryId] = response;//List<Content>
-		});
-	}
+	// $scope.findByCategoryId = function(categoryId){
+	// 	contentService.findByCategoryId(categoryId).success(function(response){
+	// 		$scope.contentList[categoryId] = response;//List<Content>
+	// 	});
+	// }
+
+    // 查询所有广告
+    $scope.findAllCategory = function(){
+        contentService.findAllCategory().success(function(response){
+            for(var i=1;i<response.length;i++) {
+                $scope.contentList[i] = response[i];
+            }
+        });
+    }
 
 
 	//搜索  （传递参数）

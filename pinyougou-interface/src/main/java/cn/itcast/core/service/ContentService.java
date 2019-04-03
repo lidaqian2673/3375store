@@ -20,4 +20,6 @@ public interface ContentService {
 	public void delAll(Long[] ids);
 
     List<Content> findByCategoryId(Long categoryId);
+
+    List<List> findAllCategory();
 }

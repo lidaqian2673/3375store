@@ -22,4 +22,12 @@ public class ContentController {
     public List<Content> findByCategoryId(Long categoryId){
         return contentService.findByCategoryId(categoryId);
     }
+
+    //查询所有广告
+    @RequestMapping("/findAllCategory")
+    public List<List> findAllCategory(){
+        return contentService.findAllCategory();
+    }
+
+
 }

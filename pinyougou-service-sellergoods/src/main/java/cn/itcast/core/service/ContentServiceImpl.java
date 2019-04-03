@@ -10,9 +10,8 @@ import entity.PageResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -104,4 +103,32 @@ public class ContentServiceImpl implements ContentService {
         return contentList;
     }
 
+
+	//查询所有广告
+	@Override
+	public List<List> findAllCategory() {
+		ArrayList<List> lists = new ArrayList<>();
+
+		lists.add(null);
+
+		Long i = 1l;
+
+		while (true){
+
+
+			List<Content> byCategoryId = findByCategoryId(i);
+
+			if (null == byCategoryId||byCategoryId.size()==0){
+						break;
+			}
+
+			lists.add(byCategoryId);
+
+			i++;
+
+		}
+
+		return lists;
+
+	}
 }
