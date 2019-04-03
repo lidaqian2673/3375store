@@ -36,20 +36,10 @@ public class OrderTableServiceImpl implements OrderTableService {
             orderT.setReceiverMobile(order.getReceiverMobile());
             orderT.setReceiverAreaName(order.getReceiverAreaName());
             orderT.setReceiver(order.getReceiver());
-            OrderItem orderItemT = new OrderItem();
             OrderItemQuery orderItemQuery = new OrderItemQuery();
             orderItemQuery.createCriteria().andOrderIdEqualTo(orderT.getOrderId());
             List<OrderItem> orderItems = orderItemDao.selectByExample(orderItemQuery);
-            List<OrderItem> orderItemList = new ArrayList<>();
-            for (OrderItem orderItem : orderItems) {
-                orderItemT.setPicPath(orderItem.getPicPath());
-                orderItemT.setTitle(orderItem.getTitle());
-                orderItemT.setPrice(orderItem.getPrice());
-                orderItemT.setNum(orderItem.getNum());
-                orderItemT.setTotalFee(orderItem.getTotalFee());
-                orderItemList.add(orderItemT);
-            }
-            orderTable.setOrderItemList(orderItemList);
+            orderTable.setOrderItemList(orderItems);
             orderTable.setOrder(orderT);
             orderTableList.add(orderTable);
         }

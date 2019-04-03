@@ -5,7 +5,6 @@ app.controller('orderTableController' ,function($scope,$controller,orderTableSer
 
     //批量删除
     $scope.findorderTable=function(){
-        alert(1);
         orderTableService.findorderTable().success(
             function(response){
 
