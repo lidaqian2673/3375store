@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>品牌管理</title>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../plugins/jquery/jquery-2.2.3.min.js"></script>
+    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- 引入angular的js -->
+    <script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
+    <!-- 引入分页相关的JS和CSS -->
+    <script type="text/javascript" src="../plugins/angularjs/pagination.js"></script>
+    <link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+
+    <script type="text/javascript" src="../js/base_pagination.js"></script>
+    <script type="text/javascript" src="../js/controller/baseController.js"></script>
+    <script type="text/javascript" src="../js/controller/orderTableController.js"></script>
+    <script type="text/javascript" src="../js/service/orderTableService.js"></script>
+</head>
+
+<body class="hold-transition skin-red sidebar-mini" ng-app="pinyougou" ng-controller="orderTableController" ng-init="findorderTable()">
+    <!-- 头部栏位 -->
+    <!--页面顶部-->
+    <!--header-->
+    <div id="account">
+        <div class="py-container">
+            <div class="yui3-g home">
+                <!--左侧列表-->
+
+                <!--右侧主内容-->
+                <div class="yui3-u-5-6 order-pay">
+                    <div class="body">
+
+                        <div class="order-detail">
+                            <div class="orders">
+
+                                <!--order1-->
+
+                                <!--order2-->
+                            <div ng-repeat="orderTable in orderTableList">
+                                <!--<div class="choose-title" ng-repeat="order in orderTable">-->
+                                <div class="choose-title">
+                                <label data-toggle="checkbox" class="checkbox-pretty ">
+                                           <input type="checkbox" checked="checked"><span>{{orderTable.order.createTime}}　订单编号：{{orderTable.order.orderId}}  店铺：{{orderTable.order.sellerId}} </span>
+                                     </label>
+                                </div>
+                                <table class="sui-table table-bordered order-datatable" ng-repeat="item in orderTable.orderItemList">
+                                    <tbody>
+                                        <tr>
+                                            <td width="35%">
+                                                <div class="typographic"><img src="{{item.picPath}}" />
+                                                    <div class="item-msg">{{item.title}}</div>
+                                                </div>
+                                            </td>
+                                            <td width="5%" class="center">
+                                                <ul class="unstyled">
+                                                    <li>单价:{{item.price}}</li>
+                                                </ul>
+                                            </td>
+                                            <td width="5%" class="center">数量:{{item.num}}</td>
+                                            <td width="8%" class="center">
+                                                <ul class="unstyled">
+
+                                                    <li>实付款:{{item.totalFee}}</li>
+                                                </ul>
+                                            </td>
+                                            <td width="10%" class="center">
+                                                <ul class="unstyled">
+                                                    <li>收货电话:{{orderTable.order.receiverMobile}}</li>
+                                                </ul>
+                                            </td>
+                                            <td width="10%" class="center">
+                                                <ul class="unstyled">
+                                                    <li>收货地址:{{orderTable.order.receiverAreaName}}</li>
+                                                </ul>
+                                            </td>
+                                            <td width="10%" class="center">
+                                                <ul class="unstyled">
+                                                    <li>收货人姓名:{{orderTable.order.receiver}}</li>
+                                                </ul>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                            <div class="clearfix"></div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 底部栏位 -->
+    </div>
+</body>
+<!--页面底部END-->
+</html>
