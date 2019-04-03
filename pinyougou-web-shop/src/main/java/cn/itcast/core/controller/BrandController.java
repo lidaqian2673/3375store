@@ -56,7 +56,7 @@ public class BrandController {
         }
 
     }
-    //保存
+    //修改
     @RequestMapping("/update")
     public Result update(@RequestBody Brand brand){
         //保存
@@ -72,7 +72,7 @@ public class BrandController {
     //删除
     @RequestMapping("/deletes")
     public Result deletes(Long[] ids){
-        //保存
+        //删除
         try {
             brandService.deletes(ids);
             return new Result(true,"删除成功");

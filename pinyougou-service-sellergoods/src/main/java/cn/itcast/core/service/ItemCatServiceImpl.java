@@ -177,4 +177,14 @@ public class ItemCatServiceImpl implements ItemCatService {
         itemCatAudit.setItemCatAuditStatus(0);
         itemCatAuditDao.insertSelective(itemCatAudit);
     }
+
+    //删除
+    @Override
+    public void delete(Long[] ids) {
+        if (null!=ids&&ids.length>0){
+            for (Long id : ids) {
+                itemCatDao.deleteByPrimaryKey(id);
+            }
+        }
+    }
 }

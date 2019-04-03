@@ -22,4 +22,7 @@ public interface ItemCatService {
 
     //保存
     void add(ItemCat itemCat);
+
+    //删除
+    void delete(Long[] ids);
 }
