@@ -125,7 +125,9 @@ public class UploadController {
 
                     //获取一行的数据
                     row = sheet.getRow(j);
+
                     List<Object> li = new ArrayList<>();
+
                     if (row != null) {
                         for (int k = row.getFirstCellNum(); k < row.getLastCellNum() ; k++) {
                             cell = row.getCell(k);

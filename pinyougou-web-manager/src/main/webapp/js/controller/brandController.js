@@ -100,4 +100,8 @@ app.controller("brandController",function($scope,$controller,$http,brandService,
         })
     };
 
+    $scope.ExportPostList=function (tableName) {
+        uploadService.ExportPostList(tableName);
+    }
+
 });

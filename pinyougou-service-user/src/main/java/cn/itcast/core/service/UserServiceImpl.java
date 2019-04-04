@@ -2,7 +2,11 @@ package cn.itcast.core.service;
 
 import cn.itcast.core.dao.user.UserDao;
 import cn.itcast.core.pojo.user.User;
+import cn.itcast.core.pojo.user.UserQuery;
 import com.alibaba.dubbo.config.annotation.Service;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import entity.PageResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -12,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.jms.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -92,4 +97,46 @@ public class UserServiceImpl implements  UserService {
     public void updateInfo(User user) {
         userDao.insertSelective(user);
     }
+
+    /**
+     * 查询用户列表
+     * @param pageNum
+     * @param pageSize
+     * @param user
+     * @return
+     */
+    @Override
+    public PageResult selectUserList(Integer pageNum, Integer pageSize, User user) {
+        PageHelper.startPage(pageNum, pageSize);
+        UserQuery userQuery = new UserQuery();
+        UserQuery.Criteria criteria = userQuery.createCriteria();
+        if (null != user.getUsername() && user.getUsername().trim().equals("")) {
+            criteria.andUsernameLike("%" + user.getUsername() + "%");
+        }
+        if (null != user.getStatus() && !user.getStatus().trim().equals("")) {
+            criteria.andStatusEqualTo(user.getStatus());
+        }
+        Page<User> users = (Page<User>) userDao.selectByExample(userQuery);
+        return new PageResult(users.getTotal(),users.getResult());
+    }
+
+    /**
+     * 更改用户状态,冻结,解冻
+     * @param ids
+     * @param status
+     */
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+        User user = new User();
+        user.setStatus(status);
+        if (null != ids && ids.length > 0) {
+            for (Long id : ids) {
+                user.setId(id);
+                userDao.updateByPrimaryKeySelective(user);
+            }
+        }
+
+    }
+
+
 }

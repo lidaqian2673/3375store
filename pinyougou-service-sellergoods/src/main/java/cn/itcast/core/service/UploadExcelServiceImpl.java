@@ -122,7 +122,7 @@ public class UploadExcelServiceImpl implements UploadExcelService {
     private void addExcelToItemCat(List<List<Object>> data) {
         for (List<Object> datum : data) {
             ItemCat itemCat = new ItemCat();
-            itemCat.setParentId((Long) datum.get(1));
+            itemCat.setParentId((Long) datum.get(0));
             itemCat.setName((String) datum.get(1));
             itemCat.setTypeId((Long) datum.get(2));
             itemCatDao.insertSelective(itemCat);

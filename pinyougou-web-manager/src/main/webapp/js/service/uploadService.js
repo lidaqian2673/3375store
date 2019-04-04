@@ -29,6 +29,8 @@ app.service("uploadService",function($http){
             transformRequest: angular.identity
         });
     }
-
+    this.ExportPostList=function (tableName) {
+        return $http.get("../download/exportExcel.do?tableName="+tableName);
+    }
 
 });

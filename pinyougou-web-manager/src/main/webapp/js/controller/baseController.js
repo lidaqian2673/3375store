@@ -12,6 +12,7 @@ app.controller("baseController",function($scope){
 
     // 显示状态
     $scope.status = ["未审核","审核通过","审核未通过","关闭"];
+    $scope.userStatus = ["已冻结","正常"];
 	$scope.reloadList = function(){
 		// $scope.findByPage($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
 		$scope.search($scope.paginationConf.currentPage,$scope.paginationConf.itemsPerPage);
@@ -52,5 +53,7 @@ app.controller("baseController",function($scope){
 		}
 		return value;
 	}
-	
+
+
+
 });
